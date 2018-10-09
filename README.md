@@ -1,2 +1,2 @@
 # django-rest-atlas
-Wrapper around Django rest framework for better routing
+Wrapper around Django rest framework for better routing experience
