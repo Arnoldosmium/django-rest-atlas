@@ -1,12 +1,20 @@
 """
-Guarantor decorator
+:author Arnold Lin
+Decorators to guarantee payload and response structure
 """
-
 from rest_framework.parsers import JSONParser
 from django.http import JsonResponse
-from .creator import create_general_exception_response_body
+from .formater import create_general_exception_response_body
+
 
 def use_serializer(Serializer, pass_in='auto', many=False):
+    """
+    Decorator to enforce using serializer for payload
+    :param Serializer: serializer class
+    :param pass_in: what is received in function, 'auto' = serializer, 'data' = validated data
+    :param many: if using list serializer
+    :return: the wrapped view function
+    """
     def _decorator(func):
         def wrapper(self, request, *args, **kwargs):
             payload = JSONParser().parse(request)
@@ -22,6 +30,12 @@ def use_serializer(Serializer, pass_in='auto', many=False):
 
 
 def on_exception_response(exception_or_list, status=400):
+    """
+    Decorator to enforce same error message format
+    :param exception_or_list: one or a list of exception class(es)
+    :param status: the status code to return
+    :return: the wrapped view function
+    """
     if isinstance(exception_or_list, type):
         all_exceptions = (exception_or_list, )
     else:
