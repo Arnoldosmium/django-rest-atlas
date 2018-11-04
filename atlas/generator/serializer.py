@@ -5,7 +5,9 @@ import re
 
 TYPE_CHOICES = {
     "int",
+    "integer",
     "numeric",
+    "double",
     "boolean",
     "string",
     "date",
@@ -17,7 +19,7 @@ TYPE_CHOICES = {
 TYPE_DECORATOR = {
     "optional",
     "list",
-    "dict",
+    "map",
     "set",
 }
 
@@ -33,6 +35,7 @@ class FieldType:
 
     @staticmethod
     def parse(text):
+        text = text.lower()
         if text in TYPE_CHOICES:
             return FieldType(text)
 
@@ -48,8 +51,8 @@ class FieldType:
                 raise ValueError("'%s' is not a valid type decorator, valid options are %s"
                                  % (decorator, TYPE_DECORATOR))
 
-            if decorator == "dict":
-                value_types = [s.strip() for s in value_type.spilt(",")]
+            if decorator == "map":
+                value_types = [s.strip() for s in value_type.split(",")]
                 if len(value_types) != 2:
                     raise ValueError("'%s' is not a valid key-value type expression" % value_type)
                 key_type, value_type = value_types
@@ -93,7 +96,7 @@ class BaseApiField(BaseSerializer):
 
     @property
     def parsed_type(self):
-        return FieldType(self.type)
+        return FieldType.parse(self.type)
 
 
 class ApiHeaderField(BaseApiField):
