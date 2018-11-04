@@ -62,6 +62,6 @@ setup(
     ],
 
     extras_require={
-        'test': ['pytest'],
+        'test': ['pytest', 'pyyaml'],
     },
 )
